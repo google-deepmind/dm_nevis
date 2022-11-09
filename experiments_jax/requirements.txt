@@ -1,0 +1,17 @@
+absl-py~=1.2.0
+tensorflow~=2.10.0
+tensorflow-datasets~=4.6.0
+jax
+jaxlib
+dm-haiku
+chex
+optax
+scikit-learn>=1.1.0
+ml-collections==0.1.1
+dill
+Pillow
+pyquaternion
+ncompress
+xmltodict
+distrax
+tensorboard

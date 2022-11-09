@@ -1,0 +1,24 @@
+FROM tensorflow/tensorflow:2.4.0
+WORKDIR app
+
+# see https://chrisjean.com/fix-apt-get-update-the-following-signatures-couldnt-be-verified-because-the-public-key-is-not-available/
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
+RUN apt-get update
+RUN apt-get install -y sudo git apt-utils software-properties-common unrar
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+RUN apt-get install -y python3.9 python3-pip python3.9-distutils python3-dev python-virtualenv
+RUN /usr/bin/python3.9 -m pip install --upgrade setuptools pip distlib six
+
+RUN virtualenv --python=/usr/bin/python3.9 nevisenv
+RUN ln -sf nevisenv/bin/python3.9 /usr/local/bin/python3
+ENV PATH="nevisenv/bin:${PATH}"
+
+COPY dm_nevis /root/dm_nevis
+COPY requirements.txt /root/requirements.txt
+COPY README.md /root/README.md
+COPY setup.py /root/setup.py
+
+RUN cd /root && /app/nevisenv/bin/python3.9 /root/setup.py develop
+
+ENTRYPOINT ["download_dataset.py"]

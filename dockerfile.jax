@@ -1,0 +1,33 @@
+FROM nvidia/cuda:11.5.1-runtime-ubuntu18.04
+WORKDIR /app
+
+RUN apt-get update
+RUN apt-get install -y git
+RUN apt-get install -y sudo
+RUN apt-get install -y apt-utils
+RUN apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+RUN apt-get install -y python3.9 python3-pip python3.9-distutils python3-dev
+RUN python3.9 -m pip install --upgrade setuptools pip distlib six
+
+COPY dm_nevis /root/dm_nevis_package/dm_nevis
+COPY requirements.txt /root/dm_nevis_package/requirements.txt
+COPY README.md /root/dm_nevis_package/README.md
+COPY setup.py /root/dm_nevis_package/setup.py
+RUN python3.9 -m pip install /root/dm_nevis_package
+
+COPY experiments_jax /root/experiments_jax_package/experiments_jax
+COPY experiments_jax/requirements.txt /root/experiments_jax_package/requirements.txt
+COPY jax_setup.py /root/experiments_jax_package/setup.py
+RUN python3.9 -m pip install /root/experiments_jax_package
+
+ADD experiments_jax/configs /app/experiments_jax/configs 
+
+ADD experiments_jax/launch.py /app/launch.py
+ADD experiments_jax/experiment.py /app/experiment.py
+
+RUN chmod -R 777 /app
+ENV TFDS_DATA_DIR "/app/tensorflow_datasets"
+
+ENTRYPOINT ["python3.9", "launch.py"]
