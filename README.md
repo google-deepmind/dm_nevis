@@ -68,17 +68,20 @@ be done in advance of training with the script `./build_dataset.sh`:
 $ ./build_dataset.sh -h
 Usage:
         -d <DATASET_NAME> | Dataset name
-        -s <STREAM_NAME>  | LSCL Stream variant name
+        -s <STREAM_NAME>  | LSCL Stream variant name (FULL|SHORT|TINY|DEBUG|...)
         -b                | Build docker before running
         -e                | Develop mode where code is mounted
         -h                | Help message
 ```
 
 If run for the first time, pass the option `-b` alongside other commands to
-build the docker (`nevis-data`). The develop mode is useful if you need to
+build the **docker** (`nevis-data`). The develop mode is useful if you need to
 change the codebase (e.g. for adding a new dataset) and need to debug quickly
 without having to re-building the docker everytime (you still need to build the
 docker in develop mode! `-b -e`).
+
+See in `dm_nevis/streams/lscl_streams` the enum `LSCLStreamVariant` for the full
+list of downloadable streams.
 
 Some datasets are downloaded from Kaggle. See on the
 [Kaggle website](https://www.kaggle.com/docs/api) how to configure your

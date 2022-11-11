@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-usage() { 
+usage() {
   echo "Usage:"
   echo -e "\t-d <DATASET_NAME> | Dataset name"
-  echo -e "\t-s <STREAM_NAME>  | LSCL Stream variant name"
+  echo -e "\t-s <STREAM_NAME>  | LSCL Stream variant name (FULL|SHORT|TINY|DEBUG|...)"
   echo -e "\t-b                | Build docker before running"
   echo -e "\t-e                | Develop mode where code is mounted"
   echo -e "\t-h                | Help message"
@@ -56,7 +56,6 @@ if $SHOULD_BUILD_DOCKER ; then
 fi
 
 
-# TODO: define path location in args
 docker run \
   -v ${LOCAL_DIR}:/tmp ${MOUNT_MAPPING} \
   -v ${KAGGLE_CRED_DIR}:/root/.kaggle \
