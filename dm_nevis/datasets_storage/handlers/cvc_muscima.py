@@ -100,11 +100,11 @@ cvc_muscima_dataset = types.DownloadableDataset(
     name='cvc_muscima',
     download_urls=[
         types.DownloadableArtefact(
-            url='http://www.cvc.uab.es/cvcmuscima/CVCMUSCIMA_WI.zip',
+            url='http://wwwo.cvc.uab.es/cvcmuscima/CVCMUSCIMA_WI.zip',
             checksum='33d7464a3dc376a9456bbfe7aad8c18f'),
         types.DownloadableArtefact(
-            url='http://www.cvc.uab.es/cvcmuscima/Partitions_Set.zip',
+            url='http://wwwo.cvc.uab.es/cvcmuscima/Partitions_Set.zip',
             checksum='dd22cff47fd50ca01ee077b757a978cd')
     ],
-    website_url='http://www.cvc.uab.es/cvcmuscima/index_database.html',
+    website_url='http://wwwo.cvc.uab.es/cvcmuscima/index_database.html',
     handler=cvc_muscima_handler)
