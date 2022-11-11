@@ -135,6 +135,12 @@ The tensorboard can be launched with the following command.
 
 `tensorboard --lodir=~/nevis/tensorboard`
 
+You will need to have `tensorboard` installed outside the docker using
+
+```bash
+pip install tensorboard
+```
+
 Regarding the different groups of plots on tensorboard dashboard: 
   - `benchmark_metrics` contains metrics from prediction events across the
    stream, where the x-axis is the index (0-based) of the most training event.
