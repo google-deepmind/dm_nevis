@@ -10,7 +10,7 @@ evaluable in the setting of the LSCL team.
 ## Streams
 
 The most important stream can be found at `streams/lscl_stream.py`. This stream
-contains the 100-dataset image classification stream used by the effort.
+contains the 100+ dataset image classification stream reported in the paper.
 
 ## Learners
 

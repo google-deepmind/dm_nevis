@@ -101,7 +101,7 @@ Each experiment consists in training a model on a stream made of multiple
 datasets. Thus, this command will train a model on each dataset. We provide two
 main paradigm of learners: Independent and Finetuning from previous. In the
 former, we create a new randomly initialized model for each dataset. In the
-former, a model is initialized for the first dataset of the stream, and tuned
+latter, a model is initialized for the first dataset of the stream, and tuned
 sequentially for all datasets.
 
 To launch an experiment, run:
@@ -170,9 +170,9 @@ Then, we launch the example learner:
 Note that the stream `DEBUG` is already specified in the config
 `./experiments_jax/config/example.py`.
 
-## 4. Code structures
+## 4. Code paths
 
-The code structure is likewise:
+The code is structured as follows:
 
 ```bash
 |--- dm_nevis/

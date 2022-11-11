@@ -39,7 +39,7 @@ import tensorflow_datasets as tfds
 from dm_nevis.datasets_storage import paths
 LSCL_DATA_DIR = paths.LSCL_DATA_DIR
 
-# Years up to (but not including) 2020 are used for development and
+# Years up to (but not including) 2020 and beyond are used for development and
 # hyperparameter selecton. Only at the very end we run on the ramining years.
 DEFAULT_LSCL_STOP_YEAR = 2020
 
@@ -52,8 +52,6 @@ class LSCLStreamVariant(enum.Enum):
   SHORT = 'SHORT'
   TINY = 'TINY'
   DEBUG = 'DEBUG'
-  MULTILABEL_ONLY = 'MULTILABEL_ONLY'
-  FINETUNING_DEBUG = 'FINETUNING_DEBUG'
   IMAGENET_ONLY = 'IMAGENET_ONLY'
   MAJOR_DOMAIN_ONLY = 'MAJOR_DOMAIN_ONLY'
   LARGE_DATASET_ONLY = 'LARGE_DATASET_ONLY'
@@ -79,12 +77,6 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
     LSCLStreamVariant.DEBUG: {
         1999: ('Pascal 2007',),
         2000: ('COIL 20',),
-    },
-    LSCLStreamVariant.FINETUNING_DEBUG: {
-        1999: ('CIFAR 10',
-              ),
-        2000: ('CIFAR 10',
-              ),
     },
     LSCLStreamVariant.FULL: {
         1989: (),
@@ -181,16 +173,6 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
     LSCLStreamVariant.IMAGENET_ONLY: {
         2014: ('ImageNet',
               ),
-    },
-    LSCLStreamVariant.MULTILABEL_ONLY: {
-        2010: ('Pascal 2007',),
-        2013: ('IAPRTC-12',),
-        2015: ('SUN 397',),
-        2016: ('VOC Actions',),
-        2017: ('SUN Attribute',),
-        2019: ('AWA2',
-              ),
-        2021: ('NIH Chest X-ray',),
     },
     LSCLStreamVariant.MAJOR_DOMAIN_ONLY: {
         # Exclude satellite, face, texture, shape, ocr, quality, medical
