@@ -30,20 +30,23 @@ dataset. The class labels always start at 0 and go to the maximum number of
 available classes in the returned dataset.
 """
 
+import glob
 import io
 import os
+import shutil
 import tarfile
 from typing import Iterable, Sequence, Set
+
 from dm_nevis.datasets_storage.handlers import extraction_utils
 from dm_nevis.datasets_storage.handlers import splits
 from dm_nevis.datasets_storage.handlers import types
 from PIL import Image
 
 
-CARS_2001_PATH = "cars_brad.tar"
-CARS_1999_PATH = "cars_markus.tar"
+CARS_2001_PATH = "Cars_2001/cars_brad.tar"
+CARS_1999_PATH = "Cars_1999/cars_markus.tar"
 FACES_PATH = "faces.tar"
-MOTORCYCLES_2001_PATH = "motorbikes_side.tar"
+MOTORCYCLES_2001_PATH = "motorbikes_side/motorbikes_side.tar"
 
 AVAILABLE_CATEGORIES = frozenset([
     "cars_2001",
@@ -72,6 +75,11 @@ def caltech_categories_handler(
   unknown_categories = categories - AVAILABLE_CATEGORIES
   if unknown_categories:
     raise ValueError(f"Categories `{unknown_categories}` are not available")
+
+  for zip_file in glob.glob(os.path.join(artifacts_path, "*.zip")):
+    unpacked_archive = zip_file.replace(".zip", "")
+    if not os.path.exists(unpacked_archive):
+      shutil.unpack_archive(zip_file, extract_dir=artifacts_path)
 
   classes = _classes_from_categories(categories)
 
@@ -110,6 +118,8 @@ def write_fixture(path: str) -> None:
 
   for category in AVAILABLE_CATEGORIES:
     filename = _category_to_file_path(category)
+    basedir = filename.split("/")[0]
+    os.makedirs(os.path.join(path, basedir), exist_ok=True)
     _write_fixture_images(os.path.join(path, filename), num_images=5)
 
 
@@ -144,18 +154,18 @@ caltech_categories_dataset = types.DownloadableDataset(
     name="caltech_categories",
     download_urls=[
         types.DownloadableArtefact(
-            url="http://www.vision.caltech.edu/Image_Datasets/cars_brad/cars_brad.tar",
-            checksum="19c63604eb0fad32010aab0b342f744b"),
+            url="https://data.caltech.edu/records/dvx6b-vsc46/files/Cars_2001.zip?download=1",
+            checksum="e68efb9197ed6a9bc94ce46c79378d29"),
         types.DownloadableArtefact(
-            url="http://www.vision.caltech.edu/Image_Datasets/cars_markus/cars_markus.tar",
-            checksum="cd38f0d352299f9b1c00d46adb17db05"),
+            url="https://data.caltech.edu/records/fmbpr-ezq86/files/Cars_1999.zip?download=1",
+            checksum="79b12e08cf5f711f27bbd3e9c6bf371f"),
         types.DownloadableArtefact(
-            url="http://www.vision.caltech.edu/Image_Datasets/motorbikes_side/motorbikes_side.tar",
-            checksum="2d9ecca64baa8c39429d0ff8ba645f37"),
+            url="https://data.caltech.edu/records/pxb2q-1e144/files/motorbikes_side.zip?download=1",
+            checksum="ac51dc40c8df085c6663f38307685079"),
         types.DownloadableArtefact(
-            url="http://www.vision.caltech.edu/Image_Datasets/faces/faces.tar",
+            url="https://data.caltech.edu/records/6rjah-hdv18/files/faces.tar?download=1",
             checksum="a6e5b794952e362560dba0cb6601307d")
     ],
-    website_url="http://www.vision.caltech.edu/html-files/archive.html",
+    website_url="https://data.caltech.edu/",
     handler=caltech_categories_handler,
     fixture_writer=write_fixture)
