@@ -11,15 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Wrappers to unify the interface of existing datasets."""
 
-from typing import Any, Callable, NamedTuple, Optional, Tuple
+import collections
+import contextlib
+import threading
+from typing import Any, Callable, Iterator, NamedTuple, Optional, Tuple
 
 from absl import logging
 from dm_nevis.benchmarker.datasets import datasets
 import tensorflow as tf
 import tensorflow_datasets as tfds
+
+_LOCK = threading.RLock()
+_DATASET_NAME_TO_BUILDER_LOCK = collections.defaultdict(threading.RLock)
 
 
 class TFDSMetadata(NamedTuple):
@@ -69,7 +74,9 @@ def tfds_dataset_builder_fn(
     indices = combine_indices(outer_start, start, outer_end, end)
     split_with_indices = _slice_str(split, *indices)
 
-    builder.download_and_prepare()
+    with _lock_dataset_builder(tfds_name):
+      builder.download_and_prepare()
+
     ds = builder.as_dataset(split=split_with_indices, shuffle_files=shuffle)
 
     if shuffle:
@@ -160,3 +167,29 @@ def _slice_str(split: str, start: Optional[int], end: Optional[int]) -> str:
   if start is None and end is None:
     return split
   return f"{split}[{start or ''}:{'' if end is None else end}]"
+
+
+@contextlib.contextmanager
+def _lock_dataset_builder(dataset_name: str) -> Iterator[None]:
+  """Provides a process-level mutex around tfds dataset builders.
+
+  tfds download_and_prepare() appears to give errors when called concurrently.
+  This mutex provides a process-level lock for each dataset, so that
+  single-host single-process binaries can avoid this problem. In the case
+  of multi-process experiments, this strategy may no longer be sufficient.
+
+  Args:
+    dataset_name: The name of the dataset to acquire a lock for.
+
+  Yields:
+    A context manager to protect access to the given resource.
+  """
+
+  with _LOCK:
+    lock = _DATASET_NAME_TO_BUILDER_LOCK[dataset_name]
+
+  try:
+    lock.acquire()
+    yield
+  finally:
+    lock.release()
