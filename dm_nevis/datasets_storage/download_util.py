@@ -130,26 +130,36 @@ def validate_artefact_checksum(artefact_path: str, checksum: str) -> None:
         'URL of the failing dataset.')
 
 
-def lazily_download_file(uri: str, output_dir: str) -> str:
+def lazily_download_file(url: str, output_dir: str) -> str:
   """Lazily fetch a file and write it into the output dir."""
 
-  with requests.get(uri, stream=True, allow_redirects=True) as r:
-    # If an HTTP error occurred, it will be raised as an exception here.
-    r.raise_for_status()
-
-    filename = _get_filename_from_headers(r.headers) or _get_filename_from_url(
-        r.url)
-    path = os.path.join(output_dir, filename)
-    partial_path = f'{path}.part'
-
+  # try to infer filename from url, cannot work on google drive
+  tentative_filename = _get_filename_from_url(url)
+  if _is_among_allowed_extentions(tentative_filename):
+    path = os.path.join(output_dir, tentative_filename)
     if gfile.exists(path):
       logging.info('Found existing file at `%s` (skipping download)', path)
       return path
 
+  with requests.head(url) as r:
+    # If an HTTP error occurred, it will be raised as an exception here.
+    r.raise_for_status()
+    filename = _get_filename_from_headers(r.headers) or _get_filename_from_url(
+        r.url)
+    path = os.path.join(output_dir, filename)
+    if gfile.exists(path):
+      logging.info('Found existing file at `%s` (skipping download)', path)
+      return path
+
+  partial_path = f'{path}.part'
+
+  with requests.get(url, stream=True, allow_redirects=True) as r:
+    r.raise_for_status()
+
     with gfile.GFile(partial_path, 'wb') as w:
       filesize = _content_length_from_headers(r.headers)
 
-      logging.info('Downloading `%s` to `%s`', uri, path)
+      logging.info('Downloading `%s` to `%s`', url, path)
       with tqdm.tqdm(
           unit='B',
           unit_scale=True,
@@ -169,6 +179,11 @@ def lazily_download_file(uri: str, output_dir: str) -> str:
 def _get_filename_from_url(url: str) -> str:
   o = urllib.parse.urlparse(url)
   return o.path.split('/')[-1]
+
+
+def _is_among_allowed_extentions(filename: str) -> bool:
+  ext = filename.split('.')[-1]
+  return ext in ('png', 'jpg', 'jpeg', 'gif', 'zip', 'tar', 'gz', 'rar')
 
 
 def _get_filename_from_headers(headers: Dict[str, Any]) -> Optional[str]:
