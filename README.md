@@ -53,6 +53,10 @@ There are three kinds of datasets in NEVIS'22:
 
 3.  **Manual dataset download**: you need to download data yourself
 
+Note that we don't host any datasets. We do our best to keep URLs up-to-date,
+but some may break with time. In that case, raise an issue (and if you know how
+to fix it please tell us in the issue!).
+
 ### 1.1. TFDS Datasets
 
 Different streams are available, each is made of a sequence of datasets. When
@@ -217,3 +221,12 @@ different configs for the same learner!), `metrics/` implements the metrics used
 in NEVIS'22, `environment/` provides the logger and checkpointer, and
 `training/` provides learner-agnostic utilities such as the heads, the backbone,
 but also a flops counter for example.
+
+# Contact
+
+If you wish to contact us, please do! At
+[nevis@deepmind.com](mailto:nevis@deepmind.com).
+
+If you wish to use the Nevis'22 benchmark, please use the citation below.
+
+TODO Citation bibtex

@@ -155,6 +155,7 @@ def main(argv: Sequence[str]) -> None:
     raise ValueError('Provide dataset name or stream name to download.')
 
   dataset_names = _gather_dataset_names(dataset_name, stream_name)
+  logging.info('Datasets: %s', dataset_names)
   logging.info('%d datasets will be downloaded and prepared.',
                len(dataset_names))
 

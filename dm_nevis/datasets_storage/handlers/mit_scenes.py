@@ -71,7 +71,7 @@ def mit_scenes_handler(dataset_path: str) -> types.HandlerOutput:
       ))
 
   def gen(image_names, label_to_id, base_dir='indoorCVPR_09/Images'):
-    with zipfile.ZipFile(os.path.join(dataset_path, 'archive.zip'), 'r') as zf:
+    with zipfile.ZipFile(os.path.join(dataset_path, _ARCHIVE_FNAME), 'r') as zf:
       for image_name in image_names:
         label = label_to_id[image_name.split('/')[0]]
         image_path = os.path.join(base_dir, image_name)

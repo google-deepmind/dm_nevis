@@ -141,7 +141,7 @@ def lazily_download_file(url: str, output_dir: str) -> str:
       logging.info('Found existing file at `%s` (skipping download)', path)
       return path
 
-  with requests.head(url) as r:
+  with requests.get(url, stream=True, allow_redirects=True) as r:
     # If an HTTP error occurred, it will be raised as an exception here.
     r.raise_for_status()
     filename = _get_filename_from_headers(r.headers) or _get_filename_from_url(
@@ -151,10 +151,7 @@ def lazily_download_file(url: str, output_dir: str) -> str:
       logging.info('Found existing file at `%s` (skipping download)', path)
       return path
 
-  partial_path = f'{path}.part'
-
-  with requests.get(url, stream=True, allow_redirects=True) as r:
-    r.raise_for_status()
+    partial_path = f'{path}.part'
 
     with gfile.GFile(partial_path, 'wb') as w:
       filesize = _content_length_from_headers(r.headers)

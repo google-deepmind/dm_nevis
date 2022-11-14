@@ -134,7 +134,7 @@ lfwa_dataset = types.DownloadableDataset(
     # TODO: Fix download link.
     download_urls=[
         types.DownloadableArtefact(
-            url='https://drive.google.com/file/d/1p1wjaqpTh_5RHfJu4vUh8JJCdKwYMHCp/view',
+            url='https://drive.google.com/u/0/uc?id=1p1wjaqpTh_5RHfJu4vUh8JJCdKwYMHCp&export=download&confirm=y',
             checksum='96313a4780499f939bc4a06d5bebaf7d')
     ],
     website_url='https://talhassner.github.io/home/projects/lfwa/index.html',

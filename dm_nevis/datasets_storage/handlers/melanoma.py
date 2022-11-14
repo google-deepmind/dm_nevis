@@ -112,7 +112,7 @@ def _create_path_label_pairs(
   """Reads the label file and return a list of file path and label pairs."""
   zip_path_root = os.path.splitext(zip_path)[0]
   path_label_pairs = []
-  with gfile.GFile(os.path.join(artifacts_path, label_path), "rt") as f:
+  with gfile.GFile(os.path.join(artifacts_path, label_path), "r") as f:
     # skip first line
     f.readline()
     for line in f:

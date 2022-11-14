@@ -104,9 +104,11 @@ _LABELS = [
 ]
 
 
-def animal_web_handler(dataset_path: str,
-                       apply_unrar: bool = False) -> types.HandlerOutput:
-  """Handler for TID dataset."""
+def animal_web_handler(
+    dataset_path: str,
+    apply_unrar: bool = True
+) -> types.HandlerOutput:
+  """Handler for AnimalWeb dataset."""
 
   label_to_id = dict(
       ((label, label_id) for label_id, label in enumerate(_LABELS)))
@@ -155,7 +157,7 @@ animal_web_dataset = types.DownloadableDataset(
     download_urls=[
         types.DownloadableArtefact(
             url='https://drive.google.com/uc?export=download&id=13PbHxUofhdJLZzql3TyqL22bQJ3HwDK4&confirm=y',
-            checksum='e7d6ee762c89a86d1ad4285f8c7fe7d8')
+        checksum='d2d7e0a584ee4bd9badc74a9f2ef3b82')
     ],
     website_url='https://fdmaproject.wordpress.com/author/fdmaproject/',
     handler=animal_web_handler)
