@@ -227,6 +227,13 @@ but also a flops counter for example.
 If you wish to contact us, please do! At
 [nevis@deepmind.com](mailto:nevis@deepmind.com).
 
-If you wish to use the Nevis'22 benchmark, please use the citation below.
+If you wish to use the NEVIS'22 benchmark, please use the citation below:
 
-TODO Citation bibtex
+```bibtex
+@inproceedings{bornschein2022nevis,
+  title={Nevis\'22: A Stream of 100 Tasks Sampled from 30 Years of Computer Vision Research},
+  authors={Bornschein, Jorg and Galashov, Alexandre and Hemsley, Ross and Rannen-Triki, Amal and Chen, Yutian and Chaudhry, Arslan and He, Xu Owen and Douillard, Arthur and Caccia, Massimo and Feng, Qixuang and Shen, Jiajun and Rebuffi, Sylvestre-Alvise and Stacpoole, Kitty and de las Casas, Diego and Hawkins, Will and Lazaridou, Angeliki and Teh, Yee Whye and Rusu, Andrei A. and Pascanu, Razvan and Ranzato, Marc\'Aurelio},
+  booktitle={arXiv},
+  year={2022}
+}
+```
