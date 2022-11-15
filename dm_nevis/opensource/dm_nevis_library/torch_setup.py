@@ -21,7 +21,7 @@ setuptools.setup(
     name="experiments_torch",
     version="0.1",
     author="DeepMind LSCL Team",
-    author_email="nevis@deepmind.com",
+    author_email="See authors emails in paper",
     description="Nevis experiments in PyTorch.",
     long_description="Nevis experiments in PyTorch.",
     long_description_content_type="text/markdown",

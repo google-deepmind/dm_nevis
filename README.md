@@ -41,8 +41,8 @@ anything.
 ## 1. Datasets
 
 In NEVIS'22, we train and evaluate on streams. Each stream is a succession of
-datasets. Some streams have a high amount of datasets, up to 106, allowing us to
-evaluate Large-Scale Continual Learning (LSCL).
+datasets. Some streams have a large number of datasets, up to 106, allowing us
+to evaluate Large-Scale Continual Learning (LSCL).
 
 There are three kinds of datasets in NEVIS'22:
 
@@ -53,9 +53,10 @@ There are three kinds of datasets in NEVIS'22:
 
 3.  **Manual dataset download**: you need to download data yourself
 
-Note that we don't host any datasets. We do our best to keep URLs up-to-date,
-but some may break with time. In that case, raise an issue (and if you know how
-to fix it please tell us in the issue!).
+Note that we do not redistribute any data. Instead we provide URLs to download
+it. We do our best to keep URLs up-to-date. If a dataset doesn't download,
+please contact the authors and open an issue to let us know. If a dataset
+doesn't get fixed by the creators, we will remove it from our benchmark.
 
 ### 1.1. TFDS Datasets
 
@@ -224,16 +225,19 @@ but also a flops counter for example.
 
 # Contact
 
-If you wish to contact us, please do! At
-[nevis@deepmind.com](mailto:nevis@deepmind.com).
+If you wish to contact us, please raise a GitHub issue.
 
-If you wish to use the NEVIS'22 benchmark, please use the citation below:
+If you are using the NEVIS'22 benchmark, please cite:
 
 ```bibtex
-@inproceedings{bornschein2022nevis,
+@article{bornschein2022nevis,
+  author={Bornschein, J\"org and Galashov, Alexandre and Hemsley, Ross and Rannen-Triki, Amal and Chen, Yutian and Chaudhry, Arslan and He, Xu Owen and Douillard, Arthur and Caccia, Massimo and Feng, Qixuang and Shen, Jiajun and Rebuffi, Sylvestre-Alvise and Stacpoole, Kitty and de las Casas, Diego and Hawkins, Will and Lazaridou, Angeliki and Teh, Yee Whye and Rusu, Andrei A. and Pascanu, Razvan and Ranzato, Marc\'Aurelio},
   title={Nevis\'22: A Stream of 100 Tasks Sampled from 30 Years of Computer Vision Research},
-  authors={Bornschein, Jorg and Galashov, Alexandre and Hemsley, Ross and Rannen-Triki, Amal and Chen, Yutian and Chaudhry, Arslan and He, Xu Owen and Douillard, Arthur and Caccia, Massimo and Feng, Qixuang and Shen, Jiajun and Rebuffi, Sylvestre-Alvise and Stacpoole, Kitty and de las Casas, Diego and Hawkins, Will and Lazaridou, Angeliki and Teh, Yee Whye and Rusu, Andrei A. and Pascanu, Razvan and Ranzato, Marc\'Aurelio},
-  booktitle={arXiv},
-  year={2022}
+  journal={CoRR},
+  volume={abs/TBD},
+  year={2022},
+  url={https://arxiv.org/abs/TBD},
+  eprinttype={arXiv},
+  eprint={TBD}
 }
 ```
