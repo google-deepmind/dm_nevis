@@ -1,5 +1,19 @@
 # NEVIS'22
 
+NEVIS’22 is a benchmark for measuring the performance of algorithms in the field
+of continual learning. Please see the accompanying [paper] for more details.
+
+Within this Python package, we provide three components,
+
+1.  Library code to download and post-process datasets that are not available
+    within [tfds], so that the stream used in the [paper] can be replicated.
+2.  A package to combine the NEVIS’22 datasets into a _stream_, and robustly
+    evaluate learners using the evaluation protocol proposed in the NEVIS’22
+    [paper].
+3.  Baseline learners implemented in JAX and PyTorch. The JAX learners are
+    identical to the learners used for the figures in the [paper], the PyTorch
+    learners are provided for example purposes.
+
 NEVIS’22 is composed of 106 tasks chronologically sorted and extracted from
 publications randomly sampled from online proceedings of major computer vision
 conferences over the past three decades. Each task is a supervised
@@ -19,7 +33,7 @@ floating-point operations. In NEVIS’22, achieving lower error rate is by itsel
 not sufficient, if this comes at an unreasonable computational cost. Instead, we
 incentivise both accurate and efficient models.
 
-You can read more about NEVIS'22 in our [paper](TODO) and our [blog post](TODO).
+You can read more about NEVIS'22 in our [paper] and our [blog post].
 
 ## 0. Dependencies
 
@@ -31,20 +45,20 @@ anything.
     jax learners, and pytorch learners) have their own `requirements.txt` that
     you are welcome to install with `pip` and a Python version above 3.8.
 
--   We also provide dockers for simplicity, see more info
-    [here](https://docs.docker.com/get-docker/) for how to install Docker.
+-   It is also possible to run the code directly using the provided Dockerfiles.
+    see [here](https://docs.docker.com/get-docker/) for installing Docker.
 
--   Some datasets are downloaded from Kaggle. See on the
-    [Kaggle website](https://www.kaggle.com/docs/api) how to configure your
-    credentials and place them in the folder ~/.kaggle.
+-   Some datasets are downloaded from Kaggle. See the
+    [Kaggle website](https://www.kaggle.com/docs/api) for configuring your
+    credentials, and place them in the folder ~/.kaggle.
 
-## 1. Datasets
+## 1. Replicating the NEVIS'22 stream
 
-In NEVIS'22, we train and evaluate on streams. Each stream is a succession of
+In NEVIS'22, we train and evaluate on _streams_. Each stream is a sequence of
 datasets. Some streams have a large number of datasets, up to 106, allowing us
-to evaluate Large-Scale Continual Learning (LSCL).
+to evaluate Large-Scale Continual Learning.
 
-There are three kinds of datasets in NEVIS'22:
+There are three different sources for datasets in NEVIS'22:
 
 1.  **Datasets on Tensorflow-Datasets (TFDS)**: they will be downloaded
     automatically when needed
@@ -53,10 +67,18 @@ There are three kinds of datasets in NEVIS'22:
 
 3.  **Manual dataset download**: you need to download data yourself
 
-Note that we do not redistribute any data. Instead we provide URLs to download
-it. We do our best to keep URLs up-to-date. If a dataset doesn't download,
-please contact the dataset creators and open an issue to let us know. If a
-dataset doesn't get fixed by the creators, we will remove it from our benchmark.
+Note that we do not host or distribute these datasets, instead we provide URLS
+to their original source to help you download them at your own risk. We do not
+vouch for their quality or fairness, or claim that you have license to use the
+dataset. It is your responsibility to determine whether you have permission to
+use the dataset under the dataset's license. If you're a dataset owner and wish
+to update any part of it (description, citation, etc.), or do not want your
+dataset URL to be included in this library, please get in touch through a GitHub
+issue. Thanks for your contribution to the ML community!
+
+We do our best to keep datasets URLs up-to-date. If a dataset doesn't download,
+please contact the dataset owners and open an issue to let us know. If a dataset
+doesn't get fixed by the owners, we will remove it from our benchmark.
 
 ### 1.1. TFDS Datasets
 
@@ -79,7 +101,7 @@ Usage:
         -h                | Help message
 ```
 
-If run for the first time, pass the option `-b` alongside other commands to
+If running for the first time, pass the option `-b` alongside other commands to
 build the **docker** (`nevis-data`). The develop mode is useful if you need to
 change the codebase (e.g. for adding a new dataset) and need to debug quickly
 without having to re-building the docker everytime (you still need to build the
@@ -97,14 +119,14 @@ credentials and place them in the folder `~/.kaggle`.
 ImageNet is a TFDS Dataset but it needs to be downloaded manually. Please check
 the [instructions](https://www.tensorflow.org/datasets/catalog/imagenet2012).
 
-For info, TFDS will look for datasets in the directory defined by the env var
-`TFDS_DATA_DIR`.
+For info, TFDS will look for datasets in the directory defined by the
+environment variable `TFDS_DATA_DIR`.
 
 ## 2. Experiments
 
-Each experiment consists in training a model on a stream made of multiple
-datasets. Thus, this command will train a model on each dataset. We provide two
-main paradigm of learners: Independent and Finetuning from previous. In the
+Each experiment consists of training a model on a stream of multiple datasets.
+Thus, this command will train a model on each dataset. We provide two main
+paradigms of learners: _independent_ and _finetune from previous_. In the
 former, we create a new randomly initialized model for each dataset. In the
 latter, a model is initialized for the first dataset of the stream, and tuned
 sequentially for all datasets.
@@ -146,12 +168,11 @@ You will need to have `tensorboard` installed outside the docker using
 pip install tensorboard
 ```
 
-Regarding the different groups of plots on tensorboard dashboard: 
-  - `benchmark_metrics` contains metrics from prediction events across the
-   stream, where the x-axis is the index (0-based) of the most training event.
-  - `train_event_<i>` contains training and validation metrics on the training
-  index with index `i`.
-
+Regarding the different groups of plots on tensorboard dashboard: -
+`benchmark_metrics` contains metrics from prediction events across the stream,
+where the x-axis is the index (0-based) of the most training event. -
+`train_event_<i>` contains training and validation metrics on the training index
+with index `i`.
 
 ## 3. Example
 
@@ -208,26 +229,26 @@ The code is structured as follows:
 |    |--- training/
 ```
 
-`dm_nevis/` is the library of the benchmark, containing the `benchmarker/` which
-provides all utilities relative to the actual benchmark, `datasets_storage/` the
-download and preparation of the datasets, and `streams/` the definition of the
-various streams.
+`dm_nevis/` is the library of the benchmark, containing the `benchmarker/`
+library, which implements the evaluation protocol used in the [paper].
+`datasets_storage/` is a package to support the downloading and preparation of
+datasets, and `streams/` is a package defining different streams.
 
-There are two folders for the model implementations, one for jax
+There are two directories containing baseline model implementations, one for jax
 (`experiments_jax`), and one for pytorch (`experiments_torch`). In each,
-`launch.py` is the entrypoint of the docker, `experiment.py` the module where
-all the execution happens, `configs/` provides the hyperparameters definition of
-each learner, `learners/` actually implements the learners (note: you can have
-different configs for the same learner!), `metrics/` implements the metrics used
-in NEVIS'22, `environment/` provides the logger and checkpointer, and
-`training/` provides learner-agnostic utilities such as the heads, the backbone,
-but also a flops counter for example.
+`launch.py` is the Docker entrypoint, `experiment.py` is the module where all
+the execution happens, `configs/` provides the hyperparameters for each learner,
+`learners/` implements the learners (note: in some cases, there are different
+configs for the same learner), `metrics/` implements the metrics used in
+NEVIS'22, `environment/` provides the logger and checkpointer, and `training/`
+provides learner-agnostic utilities such as the heads, the backbone, but also a
+flops counter for example.
 
 # Contact
 
 If you wish to contact us, please raise a GitHub issue.
 
-If you are using the NEVIS'22 benchmark, please cite:
+If you are using the NEVIS'22 benchmark, please cite the following paper,
 
 ```bibtex
 @article{bornschein2022nevis,
@@ -241,3 +262,7 @@ If you are using the NEVIS'22 benchmark, please cite:
   eprint={TBD}
 }
 ```
+
+[paper]: http://todo.com
+[blog post]: http://todo.com
+[tfds]: https://www.tensorflow.org/datasets/api_docs/python/tfds
