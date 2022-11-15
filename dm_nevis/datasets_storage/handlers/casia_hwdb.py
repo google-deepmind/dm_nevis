@@ -132,6 +132,13 @@ def casia_hwdb_handler(artifacts_path: str) -> types.HandlerOutput:
 
   return metadata, per_split_gen
 
+# pylint: disable=line-too-long
+# Unofficial links (but still from the authors) for the three files are:
+# - https://mail.cstnet.cn/coremail/downloadFile.jsp?key=1U31SsvkjqFd-VIyT8jLTejXo9vqo90yo9FLUu2kTDawSstETnvC3ZJdantET9GJfgKm3cKq3XKyTgGka1AGF4fdTuxEOnECzVFA3sa9wZEXaWCLTejXo9vqo90yo9FLwujXTWCyfu2LaV7L3ZtmjeIk-s71UUUUjU2l39EtjqanVW8XFWDZFW3Zr4UKw45yVZGmSsFdUZCmaUtsU18USUjgUnkU7DjBUnrU4UjjUnAU4DjKU0xUx7jFU88UcUj2U88U77jWU0fj-7wfvpGQ&code=cv62nuho
+# - https://gzc-download.ftn.qq.com/ftn_handler/f2fdd9604fbe398e97ed995547e4c31ef0460bab2a0afae99aa1526566f5251d819ba1210e5df5ed0df45ff8ad04d1a1e0ce689d26c00ec724bc97425a87e46d/?fname=Gnt1.1TrainPart2.zip&xffz=966309492&k=9c9b0132e9731ec9aee84a323734346417d2fc0b35343464464b5c0b530506505a56490b02550149575c5054180d0306054900575700035451055051570c2064240a10031b056016020d0a62544640564d1e0d42213f39deeb7da2617ba5ce637d2a8788a0cd38e4ab&code=cdd2544d
+# - https://njc-download.ftn.qq.com/ftn_handler/7eedd59d4d7a6f3ccbef7057e36f92abd09aa682a0f325491ead9454ea469ad0c68165f3683402a77b59e8085a8950a650aca0848436379699601bad022b5d20/?fname=Gnt1.1Test.zip&xffz=479659120&k=cb9c6b61e9234f98f9ef1a61376465354467a37d35646535114c0d000c505d040555195757015c1800525057185c560d044e0202505c065605510d0251556b35730d40501b55315047171a1b5c14719be76aeaae89656afaf0d85f83d48a3a643e51f0&code=4c4a5de5
+# In the event that the official server times out, the above links can be used
+# as a fall back.
 
 casia_hwdb_dataset = types.DownloadableDataset(
     name="casia_hwdb",

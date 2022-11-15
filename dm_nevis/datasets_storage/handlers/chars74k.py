@@ -149,6 +149,8 @@ def chars74k_handler(
 
   return (metadata, per_split_gen)
 
+# The following links may be used as a fallback if the given URLs are not live.
+# - https://teodecampos.github.io/chars74k/
 chars74k_dataset = types.DownloadableDataset(
     name='chars74k',
     download_urls=[

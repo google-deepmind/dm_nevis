@@ -103,7 +103,7 @@ food101n_dataset = types.DownloadableDataset(
     name='food101n',
     download_urls=[
         types.DownloadableArtefact(
-            url='https://iudata.blob.core.windows.net/food101/Food-101N_release.zip',
+            url='https://drive.google.com/u/0/uc?id=1s9NyXpi9bO-UZUvk65WVvEUExNkZ1v9V&export=download&confirm=y',
             checksum='596b41b48de43342ef1efbb2fd508e06')
     ],
     website_url='https://kuanghuei.github.io/Food-101N/',
