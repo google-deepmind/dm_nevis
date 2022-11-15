@@ -15,7 +15,7 @@ vision community has deemed interesting over time. NEVIS’22 is not just about
 data, it is also about the methodology used to train and evaluate learners. We
 evaluate learners in terms of their ability to learn future tasks, as measured
 by their trade-off between error rate and compute measured in the number of
-floating-point operations . In NEVIS’22, achieving lower error rate is by itself
+floating-point operations. In NEVIS’22, achieving lower error rate is by itself
 not sufficient, if this comes at an unreasonable computational cost. Instead, we
 incentivise both accurate and efficient models.
 
@@ -55,8 +55,8 @@ There are three kinds of datasets in NEVIS'22:
 
 Note that we do not redistribute any data. Instead we provide URLs to download
 it. We do our best to keep URLs up-to-date. If a dataset doesn't download,
-please contact the authors and open an issue to let us know. If a dataset
-doesn't get fixed by the creators, we will remove it from our benchmark.
+please contact the dataset creators and open an issue to let us know. If a
+dataset doesn't get fixed by the creators, we will remove it from our benchmark.
 
 ### 1.1. TFDS Datasets
 
