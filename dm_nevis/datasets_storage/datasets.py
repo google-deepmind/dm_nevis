@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Information about LSCL datasets for the benchmark."""
+"""Information about Nevis datasets for the benchmark."""
 
 # Datasets mapping from canonical name to tfds_name, available in tfds.
 TFDS_DATASETS_MAPPING = {

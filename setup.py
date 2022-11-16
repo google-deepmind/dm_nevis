@@ -24,7 +24,7 @@ with open("requirements.txt", "r") as f:
 setuptools.setup(
     name="dm_nevis",
     version="0.1",
-    author="DeepMind Large-Scale Continual Learning (LSCL) Team",
+    author="DeepMind Nevis Team",
     author_email="See authors emails in paper",
     description="A benchmark for continual learning.",
     long_description=long_description,

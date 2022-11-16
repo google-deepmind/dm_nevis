@@ -11,12 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """File containing all the paths."""
 # pylint: disable=line-too-long
 import os
-LSCL_DATA_DIR = os.environ.get('LSCL_DATA_DIR', '/tmp/nevis_data_dir')
-LSCL_RAW_DATA_DIR = os.environ.get('LSCL_RAW_DATA_DIR', '/tmp/nevis_raw_data_dir')
+NEVIS_DATA_DIR = os.environ.get('NEVIS_DATA_DIR', '/tmp/nevis_data_dir')
+NEVIS_RAW_DATA_DIR = os.environ.get('NEVIS_RAW_DATA_DIR', '/tmp/nevis_raw_data_dir')
 METADATA_FNAME = 'metadata'
 STATUS_FNAME = 'status'
 STABLE_DIR_NAME = 'stable'

@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Create a launchpad program for benchmarking learners.
 
 This module provides an interface for constructing a launchpad program that can
@@ -54,10 +53,9 @@ from dm_nevis.benchmarker.environment import environment
 from dm_nevis.benchmarker.learners import learner_interface
 from experiments_torch.environment import logging_writer
 from experiments_torch.environment import noop_checkpointer
-from experiments_torch.metrics import lscl_metrics
+from experiments_torch.metrics import nevis_metrics
 import ml_collections
 import torch
-
 
 ProgramStopper = Callable[[], None]
 LearnerBuilderFn = Callable[[], learner_interface.Learner]
@@ -173,8 +171,8 @@ def _run_environment(checkpoint_restore_path: Optional[str],
   checkpointer = noop_checkpointer.NoOpCheckpointer(
       restore_path=checkpoint_restore_path)
 
-  metrics = lscl_metrics.lscl_metrics(stream.get_dataset_by_key,
-                                      benchmark_metrics_writer)
+  metrics = nevis_metrics.nevis_metrics(stream.get_dataset_by_key,
+                                        benchmark_metrics_writer)
 
   optional_checkpoint_to_resume = checkpointer.restore()
   output = environment.run(

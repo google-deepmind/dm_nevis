@@ -7,7 +7,7 @@ Within this Python package, we provide three components,
 
 1.  Library code to download and post-process datasets that are not available
     within [tfds], so that the stream used in the [paper] can be replicated.
-2.  A package to combine the NEVIS’22 datasets into a _stream_, and robustly
+2.  A package to combine the NEVIS’22 datasets into a *stream*, and robustly
     evaluate learners using the evaluation protocol proposed in the NEVIS’22
     [paper].
 3.  Baseline learners implemented in JAX and PyTorch. The JAX learners are
@@ -54,7 +54,7 @@ anything.
 
 ## 1. Replicating the NEVIS'22 stream
 
-In NEVIS'22, we train and evaluate on _streams_. Each stream is a sequence of
+In NEVIS'22, we train and evaluate on *streams*. Each stream is a sequence of
 datasets. Some streams have a large number of datasets, up to 106, allowing us
 to evaluate Large-Scale Continual Learning.
 
@@ -95,7 +95,7 @@ be done in advance of training with the script `./build_dataset.sh`:
 $ ./build_dataset.sh -h
 Usage:
         -d <DATASET_NAME> | Dataset name
-        -s <STREAM_NAME>  | LSCL Stream variant name (FULL|SHORT|TINY|DEBUG|...)
+        -s <STREAM_NAME>  | Stream variant name (FULL|SHORT|TINY|DEBUG|...)
         -b                | Build docker before running
         -e                | Develop mode where code is mounted
         -h                | Help message
@@ -107,8 +107,8 @@ change the codebase (e.g. for adding a new dataset) and need to debug quickly
 without having to re-building the docker everytime (you still need to build the
 docker in develop mode! `-b -e`).
 
-See in `dm_nevis/streams/lscl_streams` the enum `LSCLStreamVariant` for the full
-list of downloadable streams.
+See in `dm_nevis/streams/nevis_stream.py` the enum `NEVISStreamVariant` for the
+full list of downloadable streams.
 
 Some datasets are downloaded from Kaggle. See on the
 [Kaggle website](https://www.kaggle.com/docs/api) how to configure your
@@ -126,7 +126,7 @@ environment variable `TFDS_DATA_DIR`.
 
 Each experiment consists of training a model on a stream of multiple datasets.
 Thus, this command will train a model on each dataset. We provide two main
-paradigms of learners: _independent_ and _finetune from previous_. In the
+paradigms of learners: *independent* and *finetune from previous*. In the
 former, we create a new randomly initialized model for each dataset. In the
 latter, a model is initialized for the first dataset of the stream, and tuned
 sequentially for all datasets.
@@ -146,7 +146,7 @@ using the id `-1` to symbolize cpu.
 
 ## Output directory for metrics
 
-By default the metrics computed by `experiments_<X>/metrics/lscl_metrics.py`
+By default the metrics computed by `experiments_<X>/metrics/nevis_metrics.py`
 will be written in `./nevis_output_dir`.
 
 You can specify a different path by overriding the environment variable

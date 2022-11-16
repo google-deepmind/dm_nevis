@@ -11,21 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Split-Imagenet stream that consists of 100 ten-way classification tasks."""
 from concurrent import futures
 from typing import Dict, Iterator, Mapping, Sequence, Tuple
 from dm_nevis.benchmarker.datasets import datasets
 from dm_nevis.benchmarker.datasets import streams
 from dm_nevis.benchmarker.datasets.builders import split_imagenet
-from dm_nevis.streams import lscl_stream
+from dm_nevis.streams import nevis_stream
 import numpy as np
 
 DEFAULT_THREADPOOL_WORKERS = 30
 
 
 class SplitImagenetStream:
-  """The LSCL benchmark stream.
+  """The split ImageNet benchmark stream.
 
   The stream adds a train event for each instance of the train data in the
   stream.
@@ -41,8 +40,8 @@ class SplitImagenetStream:
   def __init__(
       self,
       *,
-      predict_event_splits: Sequence[lscl_stream.Split] = (
-          lscl_stream.Split.DEV_TEST,),
+      predict_event_splits: Sequence[nevis_stream.Split] = (
+          nevis_stream.Split.DEV_TEST,),
       shuffle_seed: int = 1,
       shuffle_tasks_order: bool = False,
   ):
@@ -72,8 +71,8 @@ class SplitImagenetStream:
 
 def _get_events_and_lookup(
     *,
-    predict_event_splits: Sequence[lscl_stream.Split] = (
-        lscl_stream.Split.DEV_TEST,),
+    predict_event_splits: Sequence[nevis_stream.Split] = (
+        nevis_stream.Split.DEV_TEST,),
     shuffle_seed: int = 1,
     shuffle_datasets_order: bool = False,
 ) -> Tuple[Sequence[streams.Event], Mapping[streams.DatasetKey,
@@ -104,7 +103,7 @@ def _get_events_and_lookup(
 
     for split in predict_event_splits:
       events.append(
-          streams.PredictionEvent(lscl_stream.split_to_key(split, result)))
+          streams.PredictionEvent(nevis_stream.split_to_key(split, result)))
 
     datasets_by_key[result.train.key] = result.train.dataset
     datasets_by_key[result.test.key] = result.test.dataset
@@ -116,7 +115,7 @@ def _get_events_and_lookup(
 
 
 def _build_lookup(
-    task_indices: Sequence[int]) -> Dict[int, lscl_stream.DatasetSplits]:
+    task_indices: Sequence[int]) -> Dict[int, nevis_stream.DatasetSplits]:
   """Creates a lookup for given dataset names."""
 
   with futures.ThreadPoolExecutor(
@@ -126,7 +125,7 @@ def _build_lookup(
   return dict(zip(task_indices, result))
 
 
-def _get_dataset_splist_by_task(task_index: int) -> lscl_stream.DatasetSplits:
+def _get_dataset_splist_by_task(task_index: int) -> nevis_stream.DatasetSplits:
   """Construct key and dataset for tfds dataset."""
   train_dataset = split_imagenet.get_dataset(
       task_index=task_index, split='train')
@@ -144,11 +143,11 @@ def _get_dataset_splist_by_task(task_index: int) -> lscl_stream.DatasetSplits:
   dev_test_key = f'{dataset_key_prefix}_dev_test'
   test_key = f'{dataset_key_prefix}_test'
 
-  return lscl_stream.DatasetSplits(
-      train=lscl_stream.KeyAndDataset(train_key, train_dataset),
-      dev=lscl_stream.KeyAndDataset(dev_key, dev_dataset),
-      train_and_dev=lscl_stream.KeyAndDataset(train_and_dev_key,
-                                              train_and_dev_dataset),
-      dev_test=lscl_stream.KeyAndDataset(dev_test_key, dev_test_dataset),
-      test=lscl_stream.KeyAndDataset(test_key, test_dataset),
+  return nevis_stream.DatasetSplits(
+      train=nevis_stream.KeyAndDataset(train_key, train_dataset),
+      dev=nevis_stream.KeyAndDataset(dev_key, dev_dataset),
+      train_and_dev=nevis_stream.KeyAndDataset(train_and_dev_key,
+                                               train_and_dev_dataset),
+      dev_test=nevis_stream.KeyAndDataset(dev_test_key, dev_test_dataset),
+      test=nevis_stream.KeyAndDataset(test_key, test_dataset),
   )

@@ -11,30 +11,30 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"""Tests for dm_nevis.streams.lscl_stream."""
+"""Tests for dm_nevis.streams.nevis_stream."""
 
 from absl.testing import absltest
 from absl.testing import parameterized
-from dm_nevis.streams import lscl_stream
+from dm_nevis.streams import nevis_stream
 
 
-class LsclStreamTest(parameterized.TestCase):
+class NevisStreamTest(parameterized.TestCase):
 
   @parameterized.named_parameters(
       ("spaces", "some data key", "some_data_key"),
       ("everything", " /-~", "____"),
   )
   def test_canonicalize_name(self, name, expected):
-    self.assertEqual(lscl_stream._canonicalize_name(name), expected)
+    self.assertEqual(nevis_stream._canonicalize_name(name), expected)
 
   @parameterized.named_parameters(
-      ("full_stream", lscl_stream.LSCLStreamVariant.FULL),
-      ("short_tream", lscl_stream.LSCLStreamVariant.SHORT),
+      ("full_stream", nevis_stream.NevisStreamVariant.FULL),
+      ("short_tream", nevis_stream.NevisStreamVariant.SHORT),
   )
   def test_datasets_in_stream(self, stream_variant):
-    n1 = lscl_stream.datasets_in_stream(stream_variant, remove_duplicates=True)
-    n2 = lscl_stream.datasets_in_stream(stream_variant, remove_duplicates=False)
+    n1 = nevis_stream.datasets_in_stream(stream_variant, remove_duplicates=True)
+    n2 = nevis_stream.datasets_in_stream(
+        stream_variant, remove_duplicates=False)
 
     self.assertSameElements(n1, n2)
 

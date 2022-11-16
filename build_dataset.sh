@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   echo "Usage:"
   echo -e "\t-d <DATASET_NAME> | Dataset name"
-  echo -e "\t-s <STREAM_NAME>  | LSCL Stream variant name (FULL|SHORT|TINY|DEBUG|...)"
+  echo -e "\t-s <STREAM_NAME>  | Stream variant name (FULL|SHORT|TINY|DEBUG|...)"
   echo -e "\t-b                | Build docker before running"
   echo -e "\t-e                | Develop mode where code is mounted"
   echo -e "\t-h                | Help message"
@@ -39,8 +39,8 @@ done
 eval LOCAL_DIR="~/nevis"
 eval KAGGLE_CRED_DIR="~/.kaggle"
 NEVIS_CODE_DIR=`realpath ./dm_nevis`
-LSCL_DATA_DIR="/tmp/nevis_data_dir"
-LSCL_RAW_DATA_DIR="/tmp/nevis_raw_data_dir"
+NEVIS_DATA_DIR="/tmp/nevis_data_dir"
+NEVIS_RAW_DATA_DIR="/tmp/nevis_raw_data_dir"
 
 if $DEVELOP_MODE ; then
   MOUNT_MAPPING="-v ${NEVIS_CODE_DIR}:/root/dm_nevis"
@@ -59,8 +59,8 @@ fi
 docker run \
   -v ${LOCAL_DIR}:/tmp ${MOUNT_MAPPING} \
   -v ${KAGGLE_CRED_DIR}:/root/.kaggle \
-  --env LSCL_DATA_DIR=${LSCL_DATA_DIR} \
-  --env LSCL_RAW_DATA_DIR=${LSCL_RAW_DATA_DIR} \
+  --env NEVIS_DATA_DIR=${NEVIS_DATA_DIR} \
+  --env NEVIS_RAW_DATA_DIR=${NEVIS_RAW_DATA_DIR} \
   -it "$IMG" \
   --try_download_artifacts_from_urls \
   --write_stable_version \

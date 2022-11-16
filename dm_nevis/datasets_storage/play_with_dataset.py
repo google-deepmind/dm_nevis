@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-r"""Script to download all the LSCL datasets.
+r"""Script to download all the Nevis datasets.
 """
 
 import os

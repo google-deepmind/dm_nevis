@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-r"""Script to download all the LSCL datasets.
+r"""Script to download all the Nevis datasets.
 """
 
 import os
@@ -27,7 +26,7 @@ from dm_nevis.datasets_storage import download_util as du
 from dm_nevis.datasets_storage import handlers
 from dm_nevis.datasets_storage import preprocessing
 from dm_nevis.datasets_storage import version_control as vc
-from dm_nevis.streams import lscl_stream
+from dm_nevis.streams import nevis_stream
 from tensorflow.io import gfile
 
 # pylint:disable=line-too-long
@@ -84,12 +83,12 @@ def _gather_dataset_names(dataset_name: str, stream_name: str) -> list[str]:
   if dataset_name:
     return [dataset_name.lower()]
 
-  stream = lscl_stream.LSCLStreamVariant[stream_name.upper()]
+  stream = nevis_stream.NevisStreamVariant[stream_name.upper()]
   dataset_names = []
-  for dataset_pretty_names in lscl_stream.LSCL_STREAM_PER_YEAR[stream].values():
-    for dataset_pretty_name in dataset_pretty_names:
-      source = lscl_stream.DATASET_NAME_TO_SOURCE[dataset_pretty_name]
-      if isinstance(source, lscl_stream.NevisSource):
+  for pretty_names in nevis_stream.NEVIS_STREAM_PER_YEAR[stream].values():
+    for dataset_pretty_name in pretty_names:
+      source = nevis_stream.DATASET_NAME_TO_SOURCE[dataset_pretty_name]
+      if isinstance(source, nevis_stream.NevisSource):
         dataset_names.append(source.name)
 
   return dataset_names
@@ -136,8 +135,8 @@ def _download_and_prepare_dataset(
 def main(argv: Sequence[str]) -> None:
   del argv
 
-  if not gfile.exists(vc.get_lscl_data_dir()):
-    gfile.makedirs(vc.get_lscl_data_dir())
+  if not gfile.exists(vc.get_nevis_data_dir()):
+    gfile.makedirs(vc.get_nevis_data_dir())
 
   num_shards = _NUM_SHARDS.value
   shuffle_buffer_size = _SHUFFLE_BUFFER_SIZE.value

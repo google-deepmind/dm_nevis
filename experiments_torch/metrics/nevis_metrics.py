@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"""Metrics for the LSCL project."""
+"""Metrics for the Nevis project."""
 # TODO: add back the test file
 
 import collections
@@ -32,7 +31,6 @@ from dm_nevis.benchmarker.metrics import metrics_aggregators
 from dm_nevis.benchmarker.metrics import multi_label_classification_metrics
 import numpy as np
 from tensorflow.io import gfile
-
 
 KNOWN_SPLIT_SUFFICES = frozenset([
     "train",
@@ -63,7 +61,7 @@ class TrainMetrics:
 
 
 @dataclasses.dataclass(frozen=True)
-class LSCLMetricsState:
+class NevisMetricsState:
   """The metrics state for this aggregator.
 
   We maintain a 1-to-1 relationship between events in the stream and entries
@@ -73,11 +71,11 @@ class LSCLMetricsState:
   metrics: Sequence[Union[PredictionMetrics, TrainMetrics]]
 
 
-def lscl_metrics(
+def nevis_metrics(
     dataset_lookup: Callable[[streams.DatasetKey], datasets.Dataset],
     metrics_writer: datawriter_interface.DataWriter
 ) -> metrics_aggregators.MetricsAggregator:
-  """Returns a metrics aggregator for the LSCL stream.
+  """Returns a metrics aggregator for the Nevis stream.
 
   This aggregator computes common classification metrics for every
   prediction event in the stream. Once the stream has finished, the aggregator
@@ -91,24 +89,24 @@ def lscl_metrics(
       time aggregate is called.
 
   Returns:
-    A metrics aggregator for use in the LSCL stream and with the benchmarker.
+    A metrics aggregator for use in the Nevis stream and with the benchmarker.
   """
 
-  def init() -> LSCLMetricsState:
+  def init() -> NevisMetricsState:
     logging.info("Initializing metrics")
     predictions_dir = _create_output_dir()
     logging.info("Writing raw predictions to %s", predictions_dir)
 
-    return LSCLMetricsState(
+    return NevisMetricsState(
         predictions_dir=predictions_dir,
         metrics=[],
     )
 
   def aggregate_train_event(
-      state: LSCLMetricsState,
+      state: NevisMetricsState,
       event: streams.TrainingEvent,
       resources_used: learner_interface.ResourceUsage,
-  ) -> LSCLMetricsState:
+  ) -> NevisMetricsState:
     task_key = dataset_lookup(event.dev_dataset_key).task_key
     return dataclasses.replace(
         state,
@@ -119,10 +117,10 @@ def lscl_metrics(
     )
 
   def aggregate_predict_event(
-      state: LSCLMetricsState,
+      state: NevisMetricsState,
       event: streams.PredictionEvent,
       predictions: Iterator[learner_interface.Predictions],
-  ) -> LSCLMetricsState:
+  ) -> NevisMetricsState:
 
     resources_used = _combined_train_resources_used(state)
     dataset = dataset_lookup(event.dataset_key)
@@ -176,7 +174,7 @@ def lscl_metrics(
                                                _compute_results)
 
 
-def _compute_results(state: LSCLMetricsState) -> metrics_aggregators.Results:
+def _compute_results(state: NevisMetricsState) -> metrics_aggregators.Results:
   """Compute statistics over the stream."""
 
   prediction_metrics_by_split = _extract_prediction_metrics_by_split(state)
@@ -196,7 +194,7 @@ def _compute_results(state: LSCLMetricsState) -> metrics_aggregators.Results:
 
 
 def _extract_prediction_metrics_by_split(
-    state: LSCLMetricsState) -> Mapping[str, Sequence[PredictionMetrics]]:
+    state: NevisMetricsState) -> Mapping[str, Sequence[PredictionMetrics]]:
   """Separates out the predict metrics by dataset split name."""
   predict_metrics_by_split = collections.defaultdict(list)
 
@@ -269,7 +267,7 @@ def _compute_multi_label_results(
 
 
 def _combined_train_resources_used(
-    state: LSCLMetricsState) -> learner_interface.ResourceUsage:
+    state: NevisMetricsState) -> learner_interface.ResourceUsage:
   """Computes total train resources used so far."""
   result = None
 
@@ -288,14 +286,14 @@ def _combined_train_resources_used(
   return result
 
 
-def _num_train_events(state: LSCLMetricsState) -> int:
+def _num_train_events(state: NevisMetricsState) -> int:
   return sum(1 for m in state.metrics if isinstance(m, TrainMetrics))
 
 
 def _try_to_extract_split(dataset_key: str) -> Optional[str]:
   """Attempts to compute the split from the dataset key.
 
-  For the LSCL stream, the dataset splits are stored at the end of the dataset
+  For the Nevis stream, the dataset splits are stored at the end of the dataset
   key, as `<dataset_name>_<split>`.
 
   Args:

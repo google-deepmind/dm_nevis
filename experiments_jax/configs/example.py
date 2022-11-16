@@ -20,7 +20,7 @@ import functools
 
 from dm_nevis.benchmarker.environment import logger_utils
 from experiments_jax.learners.example import example_learner
-from dm_nevis.streams import lscl_stream
+from dm_nevis.streams import nevis_stream
 import ml_collections
 
 
@@ -36,9 +36,9 @@ def get_config() -> ml_collections.ConfigDict:
       'experiment': {
           'resume_from_checkpoint_path': None,
           'stream': {
-              'ctor': lscl_stream.LSCLStream,
+              'ctor': nevis_stream.NevisStream,
               'kwargs': {
-                  'stream_variant': lscl_stream.LSCLStreamVariant.DEBUG,
+                  'stream_variant': nevis_stream.NevisStreamVariant.DEBUG,
               }
           },
           'learner': {

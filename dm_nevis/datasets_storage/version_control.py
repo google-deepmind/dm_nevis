@@ -18,17 +18,17 @@ import os
 from dm_nevis.datasets_storage import paths
 
 
-def get_lscl_data_dir() -> str:
+def get_nevis_data_dir() -> str:
   """Prefix directory where all the data lives."""
-  return paths.LSCL_DATA_DIR
+  return paths.NEVIS_DATA_DIR
 
 
 def get_dataset_path(dataset: str, version: str = paths.STABLE_DIR_NAME) -> str:
   """Provides directory for the dataset and given version.
 
-  Currently, we assume that data lives in `LSCL_DATA_DIR` directory followed
+  Currently, we assume that data lives in `NEVIS_DATA_DIR` directory followed
   by the proposed version. It means that if the version is `stable`, the dataset
-  will be living in `LSCL_DATA_DIR/stable/dataset` directory.
+  will be living in `NEVIS_DATA_DIR/stable/dataset` directory.
 
   Args:
     dataset: Name of the dataset
@@ -37,4 +37,4 @@ def get_dataset_path(dataset: str, version: str = paths.STABLE_DIR_NAME) -> str:
   Returns:
     Path to the dataset location for the given version.
   """
-  return os.path.join(get_lscl_data_dir(), version, dataset)
+  return os.path.join(get_nevis_data_dir(), version, dataset)

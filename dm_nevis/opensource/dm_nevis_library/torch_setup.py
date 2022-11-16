@@ -20,7 +20,7 @@ with open("requirements.txt", "r") as f:
 setuptools.setup(
     name="experiments_torch",
     version="0.1",
-    author="DeepMind LSCL Team",
+    author="DeepMind Nevis Team",
     author_email="See authors emails in paper",
     description="Nevis experiments in PyTorch.",
     long_description="Nevis experiments in PyTorch.",

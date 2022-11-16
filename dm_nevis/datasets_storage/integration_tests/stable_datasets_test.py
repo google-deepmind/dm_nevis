@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Integration tests for stable datasets in LSCL dataset storage.
+"""Integration tests for stable datasets in Nevis dataset storage.
 
 The purpose of these tests is to guarantee that a dataset specified in
 `DATASETS_TO_RUN_INTEGRATION_TESTS_FOR` is available in the `stable` version
@@ -42,7 +42,7 @@ DATASETS_TO_RUN_INTEGRATION_TESTS_FOR = [
 
 @absltest.skipThisClass('Timeout for OSS')
 class StableDatasetsTest(tf.test.TestCase, parameterized.TestCase):
-  """Tests on the `stable` version of LSCL datasets.
+  """Tests on the `stable` version of Nevis datasets.
 
   These tests go over all the specified datasets in
   `DATASETS_TO_RUN_INTEGRATION_TESTS_FOR` in the `stable` dataset directory
@@ -53,7 +53,7 @@ class StableDatasetsTest(tf.test.TestCase, parameterized.TestCase):
 
   @parameterized.parameters(sorted(DATASETS_TO_RUN_INTEGRATION_TESTS_FOR))
   def test_datasets_available(self, dataset_name):
-    data_dir = vc.get_lscl_stable_data_dir()
+    data_dir = vc.get_nevis_stable_data_dir()
     dataset_path = os.path.join(data_dir, dataset_name)
     status = du.try_read_status(dataset_path)
     self.assertEqual(status, du.DatasetDownloadStatus.READY)

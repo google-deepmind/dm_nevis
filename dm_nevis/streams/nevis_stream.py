@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-r"""Defines the LSCL main stream.
+r"""Defines the NEVIS main stream.
 
 To check that this stream is working as intended, a binary is provided at
-iterate_lscl_stream.py in this directory. Running this binary will iterate
+iterate_nevis_stream.py in this directory. Running this binary will iterate
 the stream and print the first example in every (successfully fetched) dataset.
 """
 
@@ -37,16 +36,16 @@ import numpy as np
 import tensorflow_datasets as tfds
 
 from dm_nevis.datasets_storage import paths
-LSCL_DATA_DIR = paths.LSCL_DATA_DIR
+NEVIS_DATA_DIR = paths.NEVIS_DATA_DIR
 
 # Years up to (but not including) 2020 and beyond are used for development and
 # hyperparameter selecton. Only at the very end we run on the ramining years.
-DEFAULT_LSCL_STOP_YEAR = 2020
+DEFAULT_NEVIS_STOP_YEAR = 2020
 
 DEFAULT_NUM_THREADPOOL_WORKERS = 10
 
 
-class LSCLStreamVariant(enum.Enum):
+class NevisStreamVariant(enum.Enum):
   """Known task streams."""
   FULL = 'FULL'
   SHORT = 'SHORT'
@@ -73,12 +72,12 @@ class Split(enum.Enum):
   TEST = 'test'
 
 
-LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = {
-    LSCLStreamVariant.DEBUG: {
+NEVIS_STREAM_PER_YEAR: Mapping[NevisStreamVariant, Mapping[int, Sequence[str]]] = {
+    NevisStreamVariant.DEBUG: {
         1999: ('Pascal 2007',),
         2000: ('COIL 20',),
     },
-    LSCLStreamVariant.FULL: {
+    NevisStreamVariant.FULL: {
         1989: (),
         1992:
             ('Magellan Venus Volcanoes', 'Aberdeen face database.'),
@@ -131,7 +130,7 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
                'covid-19 x-ray', 'PatchCamelyon', 'DDSM',
                'Synthetic COVID-19 Chest X-ray Dataset'),
     },
-    LSCLStreamVariant.SHORT: {
+    NevisStreamVariant.SHORT: {
         2004: ('COIL 100', 'MNIST'
               ),
         2006: ('Pascal 2005', 'Caltech cars, motorbikes', 'UIUC cars'),
@@ -159,7 +158,7 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
         2019: ('Fashion MNIST',),
         2020: ('Stanford Dogs', 'CUB 200', 'Stanford Cars', 'FGVC Aircraft'),
     },
-    LSCLStreamVariant.TINY: {
+    NevisStreamVariant.TINY: {
         2004: ('MNIST',),
         2010: ('Caltech 101',),
         2014: ('Pascal 2012',),
@@ -170,11 +169,11 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
         ),
         2020: ('CUB 200',),
     },
-    LSCLStreamVariant.IMAGENET_ONLY: {
+    NevisStreamVariant.IMAGENET_ONLY: {
         2014: ('ImageNet',
               ),
     },
-    LSCLStreamVariant.MAJOR_DOMAIN_ONLY: {
+    NevisStreamVariant.MAJOR_DOMAIN_ONLY: {
         # Exclude satellite, face, texture, shape, ocr, quality, medical
         1989: (),
         1992: (),
@@ -211,7 +210,7 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
                'Tubercolosis', 'covid-19 x-ray', 'PatchCamelyon', 'DDSM',
                'Synthetic COVID-19 Chest X-ray Dataset'),
     },
-    LSCLStreamVariant.LARGE_DATASET_ONLY: {
+    NevisStreamVariant.LARGE_DATASET_ONLY: {
         # Exclude datasets with less than 10_000 samples,
         # all splits combined.
         1989: (),
@@ -251,9 +250,8 @@ LSCL_STREAM_PER_YEAR: Mapping[LSCLStreamVariant, Mapping[int, Sequence[str]]] = 
     },
 }
 
-
 # List of datasets for parallel runs. These should be automatically derived from
-# the LSCLStream; unfortunately this requires reverse-mapping names and opening
+# the NevisStream; unfortunately this requires reverse-mapping names and opening
 # the stream. To keep things simple we use a static list for now; should be
 # changed when we refactor for the OSS release.
 
@@ -429,8 +427,8 @@ DATASET_NAME_TO_SOURCE = {
 # pylint: enable=line-too-long
 
 
-class LSCLStream:
-  """The LSCL benchmark stream.
+class NevisStream:
+  """The NEVIS benchmark stream.
 
   The stream adds a train event for each instance of the train data in the
   stream.
@@ -445,18 +443,18 @@ class LSCLStream:
 
   def __init__(
       self,
-      stream_variant: LSCLStreamVariant = LSCLStreamVariant.FULL,
-      stop_year: int = DEFAULT_LSCL_STOP_YEAR,
+      stream_variant: NevisStreamVariant = NevisStreamVariant.FULL,
+      stop_year: int = DEFAULT_NEVIS_STOP_YEAR,
       *,
       predict_event_splits: Sequence[Split] = (Split.DEV_TEST,),
       shuffle_seed: int = 1,
       shuffle_within_year: bool = False,
       shuffle_datasets_order: bool = False,
   ):
-    """Instantiates a LSCL task stream.
+    """Instantiates a NEVIS task stream.
 
     Args:
-      stream_variant: Which of the streams to use (see `LSCLStreamVariant`).
+      stream_variant: Which of the streams to use (see `NevisStreamVariant`).
       stop_year: The stream will only include tasks before the given year.
       predict_event_splits: Sequence of splits to use for prediction.
       shuffle_seed: An integer denoting a seed for shuffling logic when
@@ -466,9 +464,9 @@ class LSCLStream:
       shuffle_datasets_order: Whether to shuffle the order of datasets randomly
         across years.
     """
-    logging.info('Reading LSCL stream from LSCL_STREAM_PER_YEAR.')
+    logging.info('Reading NEVIS stream from NEVIS_STREAM_PER_YEAR.')
     self._events, self._datasets_by_key = _get_events_and_lookup(
-        LSCL_STREAM_PER_YEAR[stream_variant],
+        NEVIS_STREAM_PER_YEAR[stream_variant],
         stop_year,
         predict_event_splits=predict_event_splits,
         shuffle_seed=shuffle_seed,
@@ -497,8 +495,8 @@ class IndividualDatasetStream:
 
     Args:
       dataset_name: One of the dataset names from `DATASET_NAME_TO_SOURCE`.
-      second_dataset_name: Optional second dataset in the stream. If
-        it is either None or equal to the first dataset, it will not be added.
+      second_dataset_name: Optional second dataset in the stream. If it is
+        either None or equal to the first dataset, it will not be added.
       predict_event_splits: Sequence of splits to use for prediction.
     """
     dataset_split = _get_splits_for_dataset_name(dataset_name)
@@ -513,7 +511,7 @@ class IndividualDatasetStream:
               train_dataset_key=dataset_split.train.key,
               dev_dataset_key=dataset_split.dev.key,
               train_and_dev_dataset_key=dataset_split.train_and_dev.key),
-          ]
+      ]
       for split in predict_event_splits:
         self._events.append(
             streams.PredictionEvent(split_to_key(split, dataset_split)))
@@ -531,9 +529,8 @@ class IndividualDatasetStream:
 
     dataset_split = _get_splits_for_dataset_name(second_dataset_name)
     if dataset_split is None:
-      raise ValueError(
-          'Could not find second dataset `%s`' % second_dataset_name
-      )
+      raise ValueError('Could not find second dataset `%s`' %
+                       second_dataset_name)
     else:
       self._events.append(
           streams.TrainingEvent(
@@ -561,24 +558,24 @@ class IndividualDatasetStream:
 
 
 class AblationStream:
-  """The LSCL benchmark ablation stream."""
+  """The NEVIS benchmark ablation stream."""
 
   def __init__(self,
                stream_variant: AblationStreamVariant,
-               meta_train_stop_year: int = DEFAULT_LSCL_STOP_YEAR,
-               stop_year: int = DEFAULT_LSCL_STOP_YEAR + 2,
+               meta_train_stop_year: int = DEFAULT_NEVIS_STOP_YEAR,
+               stop_year: int = DEFAULT_NEVIS_STOP_YEAR + 2,
                *,
                predict_event_splits: Sequence[Split] = (Split.DEV_TEST,),
                **kwargs):
-    """Instantiates a LSCL ablation stream."""
-    logging.info('Reading LSCL ablation stream.')
+    """Instantiates a NEVIS ablation stream."""
+    logging.info('Reading NEVIS ablation stream.')
     assert stop_year > meta_train_stop_year, ('Full stream stop year needs to '
                                               'be larger than meta_train stop '
                                               'year')
     self._meta_train_stop_year = meta_train_stop_year
     self._stop_year = stop_year
 
-    datasets_by_year = LSCL_STREAM_PER_YEAR[LSCLStreamVariant.FULL]
+    datasets_by_year = NEVIS_STREAM_PER_YEAR[NevisStreamVariant.FULL]
 
     if stream_variant is AblationStreamVariant.REMOVE_FIRST_30_TASKS:
       filtered_datasets_by_year = self._remove_k_datasets_from_stream(
@@ -655,8 +652,7 @@ class AblationStream:
 
   def _remove_k_datasets_from_stream(
       self,
-      datasets_by_year: Mapping[int,
-                                Sequence[str]],
+      datasets_by_year: Mapping[int, Sequence[str]],
       k: int,
       reverse=False) -> Mapping[int, Sequence[str]]:
     """Removes k tasks from stream.
@@ -677,8 +673,7 @@ class AblationStream:
       if year >= self._meta_train_stop_year or dataset_index >= k:
         filtered_datasets_by_year[year] = dataset_names_by_year
       else:
-        num_skipped_dataset = min(
-            len(dataset_names_by_year), k - dataset_index)
+        num_skipped_dataset = min(len(dataset_names_by_year), k - dataset_index)
         task_list = dataset_names_by_year[num_skipped_dataset:]
         dataset_index += len(dataset_names_by_year)
         if task_list:
@@ -688,7 +683,7 @@ class AblationStream:
 
 def remove_imagenet_from_stream(
     datasets_by_year: Mapping[int, Sequence[str]],
-    stop_year: int = DEFAULT_LSCL_STOP_YEAR) -> Mapping[int, Sequence[str]]:
+    stop_year: int = DEFAULT_NEVIS_STOP_YEAR) -> Mapping[int, Sequence[str]]:
   """Removes ImageNet from stream."""
   filtered_datasets_by_year = {}
   for year, dataset_names_by_year in datasets_by_year.items():
@@ -702,15 +697,15 @@ def remove_imagenet_from_stream(
 
 
 def datasets_in_stream(
-    stream_variant: LSCLStreamVariant = LSCLStreamVariant.FULL,
-    stop_year: int = DEFAULT_LSCL_STOP_YEAR,
+    stream_variant: NevisStreamVariant = NevisStreamVariant.FULL,
+    stop_year: int = DEFAULT_NEVIS_STOP_YEAR,
     remove_duplicates: bool = True,
     check_availability: bool = False,
 ) -> Sequence[str]:
   """Returns the list of datasets in the stream.
 
   Args:
-    stream_variant: Which of the streams to use (see `LSCLStreamVariant`).
+    stream_variant: Which of the streams to use (see `NevisStreamVariant`).
     stop_year: Only include datasets before the given year.
     remove_duplicates: Remove duplicate datasets or not.
     check_availability: Only include datasets that are available.
@@ -719,7 +714,7 @@ def datasets_in_stream(
     A list or dataset names.
   """
   dataset_names = []
-  for year, datasets_in_year in LSCL_STREAM_PER_YEAR[stream_variant].items():
+  for year, datasets_in_year in NEVIS_STREAM_PER_YEAR[stream_variant].items():
     if year >= stop_year:
       break
     dataset_names.extend(datasets_in_year)
@@ -989,25 +984,19 @@ def _dataset_splits_for_tfds(source: TFDSSource) -> DatasetSplits:
     num_examples = dataset_info.splits['train'].num_examples
     num_train_examples = int(num_examples * train_fraction)  # 4_574 images
     num_val_examples = dataset_info.splits['validation'].num_examples
-    num_dev_test_examples = int(
-        num_val_examples * dev_test_fraction)  # 2_911 images
+    num_dev_test_examples = int(num_val_examples *
+                                dev_test_fraction)  # 2_911 images
     train_dataset = tfds_builder.get_dataset(
         dataset_name, split='train', end=num_train_examples)
     dev_dataset = tfds_builder.get_dataset(
-        dataset_name,
-        split='train',
-        start=num_train_examples)
+        dataset_name, split='train', start=num_train_examples)
     train_and_dev_dataset = tfds_builder.get_dataset(
         dataset_name, split='train')
     dev_test_dataset = tfds_builder.get_dataset(
-        dataset_name,
-        split='validation',
-        end=num_dev_test_examples)
+        dataset_name, split='validation', end=num_dev_test_examples)
     # Use provided validation split for actual testing.
     test_dataset = tfds_builder.get_dataset(
-        dataset_name,
-        split='validation',
-        start=num_dev_test_examples)
+        dataset_name, split='validation', start=num_dev_test_examples)
   else:
     raise NotImplementedError(f'TFDS dataset {dataset_name} not available')
 
@@ -1032,15 +1021,15 @@ def _dataset_splits_for_nevis(source: NevisSource) -> DatasetSplits:
   dev_key = f'{dataset_key_prefix}_dev'
 
   train_dataset = nevis_dataset_loader.get_dataset(
-      source.name, 'train', root_dir=LSCL_DATA_DIR)
+      source.name, 'train', root_dir=NEVIS_DATA_DIR)
   dev_test_dataset = nevis_dataset_loader.get_dataset(
-      source.name, 'dev-test', root_dir=LSCL_DATA_DIR)
+      source.name, 'dev-test', root_dir=NEVIS_DATA_DIR)
   test_dataset = nevis_dataset_loader.get_dataset(
-      source.name, 'test', root_dir=LSCL_DATA_DIR)
+      source.name, 'test', root_dir=NEVIS_DATA_DIR)
   dev_dataset = nevis_dataset_loader.get_dataset(
-      source.name, 'dev', root_dir=LSCL_DATA_DIR)
+      source.name, 'dev', root_dir=NEVIS_DATA_DIR)
   train_and_dev_dataset = nevis_dataset_loader.get_dataset(
-      source.name, 'train_and_dev', root_dir=LSCL_DATA_DIR)
+      source.name, 'train_and_dev', root_dir=NEVIS_DATA_DIR)
 
   return DatasetSplits(
       train=KeyAndDataset(train_key, train_dataset),
