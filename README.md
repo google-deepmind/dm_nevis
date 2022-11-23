@@ -252,17 +252,16 @@ If you are using the NEVIS'22 benchmark, please cite the following paper,
 
 ```bibtex
 @article{bornschein2022nevis,
-  author={Bornschein, J\"org and Galashov, Alexandre and Hemsley, Ross and Rannen-Triki, Amal and Chen, Yutian and Chaudhry, Arslan and He, Xu Owen and Douillard, Arthur and Caccia, Massimo and Feng, Qixuang and Shen, Jiajun and Rebuffi, Sylvestre-Alvise and Stacpoole, Kitty and de las Casas, Diego and Hawkins, Will and Lazaridou, Angeliki and Teh, Yee Whye and Rusu, Andrei A. and Pascanu, Razvan and Ranzato, Marc\'Aurelio},
+  author={Bornschein, J\"org and Galashov, Alexandre and Hemsley, Ross and Rannen-Triki, Amal and Chen, Yutian and Chaudhry, Arslan and He, Xu Owen and Douillard, Arthur and Caccia, Massimo and Feng, Qixuang and Shen, Jiajun and Rebuffi, Sylvestre-Alvise and Stacpoole, Kitty and de las Casas, Diego and Hawkins, Will and Lazaridou, Angeliki and Teh, Yee Whye and Rusu, Andrei A. and Pascanu, Razvan and Ranzato, Marc'Aurelio},
   title={Nevis\'22: A Stream of 100 Tasks Sampled from 30 Years of Computer Vision Research},
   journal={CoRR},
-  volume={abs/TBD},
+  volume={abs/2211.11747},
   year={2022},
-  url={https://arxiv.org/abs/TBD},
-  eprinttype={arXiv},
-  eprint={TBD}
+  url={https://arxiv.org/abs/2211.11747},
+  eprinttype={arXiv}
 }
 ```
 
-[paper]: http://todo.com
+[paper]: https://arxiv.org/abs/2211.11747
 [blog post]: http://todo.com
 [tfds]: https://www.tensorflow.org/datasets/api_docs/python/tfds
