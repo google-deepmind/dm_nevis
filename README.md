@@ -1,4 +1,11 @@
-# NEVIS'22
+<div align="center">
+
+# 🏝️ NEVIS'22
+
+[![Paper](https://img.shields.io/badge/arXiv-2211.11747-red)](https://arxiv.org/abs/2211.11747)
+[![Blog](https://img.shields.io/badge/blog-link-blue)](https://www.deepmind.com/blog/benchmarking-the-next-generation-of-never-ending-learners)
+
+</div>
 
 NEVIS’22 is a benchmark for measuring the performance of algorithms in the field
 of continual learning. Please see the accompanying [paper] for more details.
@@ -263,5 +270,5 @@ If you are using the NEVIS'22 benchmark, please cite the following paper,
 ```
 
 [paper]: https://arxiv.org/abs/2211.11747
-[blog post]: http://todo.com
+[blog post]: https://www.deepmind.com/blog/benchmarking-the-next-generation-of-never-ending-learners
 [tfds]: https://www.tensorflow.org/datasets/api_docs/python/tfds
