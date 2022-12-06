@@ -30,6 +30,10 @@ def check_length(length, value, name):
 class ResNet(hk.nets.ResNet):
   """Original Resnet model that returns embeddings."""
 
+  def __init__(self, num_classes=10, **kwargs):
+    # haiku expects num_classes, but the top layer won't be instantiated.
+    super().__init__(num_classes=num_classes, **kwargs)
+
   def __call__(self,
                inputs: jnp.ndarray,
                is_training: bool,
