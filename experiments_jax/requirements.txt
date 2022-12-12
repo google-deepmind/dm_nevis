@@ -1,5 +1,5 @@
 absl-py~=1.2.0
-tensorflow~=2.10.0
+tensorflow~=2.11.0
 tensorflow-datasets~=4.6.0
 jax==0.3.24
 jaxlib==0.3.24
@@ -14,4 +14,4 @@ pyquaternion==0.9.9
 ncompress~=1.0.0
 xmltodict==0.13.0
 distrax==0.1.2
-tensorboard~=2.10.0
+tensorboard~=2.11.0
