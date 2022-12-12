@@ -51,18 +51,19 @@ def get_config() -> ml_collections.ConfigDict:
       'experiment': {
           'resume_from_checkpoint_path': None,
           'stream': {
-              'ctor':
-                  streams.FilteredStream,
-              'stream_ctor':
-                  nevis_stream.NevisStream,
-              'supported_task_kinds': [tasks.TaskKind.CLASSIFICATION],
-              'stream_variant':
-                  nevis_stream.NevisStreamVariant.IMAGENET_ONLY,
-              'predict_event_splits': (
-                  nevis_stream.Split.DEV,
-                  nevis_stream.Split.DEV_TEST,
-                  nevis_stream.Split.TEST,
-              ),
+              'ctor': streams.FilteredStream,
+              'kwargs': {
+                  'stream_ctor':
+                      nevis_stream.NevisStream,
+                  'supported_task_kinds': [tasks.TaskKind.CLASSIFICATION],
+                  'stream_variant':
+                      nevis_stream.NevisStreamVariant.IMAGENET_ONLY,
+                  'predict_event_splits': (
+                      nevis_stream.Split.DEV,
+                      nevis_stream.Split.DEV_TEST,
+                      nevis_stream.Split.TEST,
+                  ),
+              },
           },
           'learner': {
               'learner_builder': finetuning_learner.learner_builder,
