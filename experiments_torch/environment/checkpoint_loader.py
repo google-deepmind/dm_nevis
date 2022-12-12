@@ -1,6 +1,6 @@
 """Functions for loading pretrained models from a checkpoint."""
 
-from typing import Tuple, Iterator
+from typing import Tuple, Union, Dict
 
 from absl import logging
 from experiments_torch.environment import pickle_checkpointer
@@ -12,7 +12,7 @@ def load_ckpt_params(
     model: models.Model,
     freeze_pretrained_backbone: bool = False,
     checkpoint_path: str = '',
-) -> Tuple[Iterator[parameter.Parameter]]:
+) -> Tuple[parameter.Parameter, Union[parameter.Parameter, Dict]]:  # pylint: disable=g-bare-generic
   """Load pretrained model parameter from a checkpoint.
 
   Args:
