@@ -4,11 +4,11 @@ from typing import Tuple
 
 from absl import logging
 import chex
-from experiments_jax.environment import pickle_checkpointer
+from experiments_jax.training import trainer
 import haiku as hk
 
 
-def load_ckpt_params(
+def load_model_params_from_ckpt(
     params: hk.Params,
     state: hk.State,
     freeze_pretrained_backbone: bool = False,
@@ -26,11 +26,14 @@ def load_ckpt_params(
     updated params split into trainable and frozen, updated states.
   """
 
-  checkpointer = pickle_checkpointer.PickleCheckpointer(checkpoint_path)
-  restored_params = checkpointer.restore()
-
-  if restored_params is None:
+  trainer_state = trainer.restore_train_state(checkpoint_path)
+  if trainer_state is None or trainer_state.trainable_params is None or trainer_state.frozen_params is None:
     return params, {}, state
+
+  restored_params = {
+      **trainer_state.trainable_params,
+      **trainer_state.frozen_params
+  }
 
   def filter_fn(module_name, *unused_args):
     del unused_args

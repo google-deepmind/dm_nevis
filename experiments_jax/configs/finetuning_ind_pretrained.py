@@ -17,7 +17,7 @@ import os
 
 from dm_nevis.benchmarker.datasets import test_stream
 from dm_nevis.benchmarker.environment import logger_utils
-from experiments_jax.environment import checkpoint_loader
+from experiments_jax.environment import pretrained_model_loader
 from experiments_jax.learners.finetuning import finetuning_learner
 from experiments_jax.training import augmentations
 from experiments_jax.training import modules
@@ -33,7 +33,7 @@ DEFAULT_EARLY_STOPPING_GRACE = 10
 DEFAULT_CHECKPOINT_DIR = os.environ.get('NEVIS_CHECKPOINT_DIR',
                                         '/tmp/nevis_checkpoint_dir')
 DEFAULT_PRETRAIN_CHECKPOINT_PATH = os.path.join(DEFAULT_CHECKPOINT_DIR,
-                                                'pretraining.ckpt')
+                                                'pretraining.pkl')
 
 FREEZE_PRETRAINED_BACKBONE = False
 
@@ -95,7 +95,8 @@ def get_config() -> ml_collections.ConfigDict:
                   # Optionally load and/or freeze pretrained parameters.
                   'load_params_fn': None,
                   'load_params_fn_with_kwargs': {
-                      'fun': checkpoint_loader.load_ckpt_params,
+                      'fun':
+                          pretrained_model_loader.load_model_params_from_ckpt,
                       'kwargs': {
                           'freeze_pretrained_backbone':
                               FREEZE_PRETRAINED_BACKBONE,

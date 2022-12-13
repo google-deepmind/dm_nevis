@@ -3,12 +3,12 @@
 from typing import Tuple, Union, Dict
 
 from absl import logging
-from experiments_torch.environment import pickle_checkpointer
 from experiments_torch.training import models
+from experiments_torch.training import trainer
 from torch.nn import parameter
 
 
-def load_ckpt_params(
+def load_model_params_from_ckpt(
     model: models.Model,
     freeze_pretrained_backbone: bool = False,
     checkpoint_path: str = '',
@@ -23,19 +23,18 @@ def load_ckpt_params(
   Returns:
     updated params split into trainable and frozen.
   """
-
-  checkpointer = pickle_checkpointer.PickleCheckpointer(checkpoint_path)
-  restored_model = checkpointer.restore()
-
-  if restored_model is None:
+  trainer_state = trainer.restore_train_state(checkpoint_path)
+  if trainer_state is None or trainer_state.model is None:
     return model.backbone.parameters(), {}
+
+  restored_model = trainer_state.model
 
   assert isinstance(restored_model, models.Model)
   logging.info('Loading pretrained model finished.')
 
   for model_param, restored_model_param in zip(
       model.backbone.parameters(), restored_model.backbone.parameters()):
-    assert model_param.data.shape == restored_model_param.data
+    assert model_param.data.shape == restored_model_param.data.shape
     model_param.data = restored_model_param.data
     model_param.requires_grad = not freeze_pretrained_backbone
 

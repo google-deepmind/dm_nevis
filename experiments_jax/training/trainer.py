@@ -76,7 +76,7 @@ def init_train_state(
   if load_params_fn:
     trainable_params, frozen_params, state = load_params_fn(params, state)
   else:
-    trainable_params, frozen_params = params, []
+    trainable_params, frozen_params = params, {}
 
   opt_state = opt.init(trainable_params)
 
