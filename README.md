@@ -209,7 +209,27 @@ Then, we launch the example learner:
 Note that the stream `DEBUG` is already specified in the config
 `./experiments_jax/config/example.py`.
 
-## 4. Code paths
+## 4. Baselines
+
+We provide several baselines, defined in the `learners/` directory with configurations
+in the `configs/` directory. Note that the same approach might have multiple configurations.
+
+Reminder, to run configuration `configs/X.py`, do `./launch_local.sh jax X.py`.
+
+We provide the following baselines:
+- **Independent**, in `configs/finetuning_ind.py` where each dataset is learned by an independent model
+- **Previous**, in `configs/finetuning_prev.py` where we learn sequentially each dataset and initialize its parameters from the parameter vector learned on the previous task.
+- **Dynamic**, in `configs/finetuning_dknn.py`. where the initialization of task T is chosen among the models which have been trained on a dataset most similar to the current dataset. This baseline performs hyperparameter tuning while learning the task, following the protocol described in our tech report.
+
+
+Variants are also proposed, such as cheaper configurations in `configs/cheap_finetuning_dknn.py` which use a smaller net and fewer trials of hyper-parameter search. These are the best entry point for people who have access to only one or few GPUs.
+
+
+It is also possible to run a pretrained model on the Nevis stream. First train 
+your own pretrained model. For example on ImageNet, run the configuration `configs/pretrain_imagenet.py`. Collect the resulting checkpoint, see configuration file to see where it's saved. 
+Then, use this checkpoint for `configs/finetuning_ind_pretrained.py`.
+
+## 5. Code paths
 
 The code is structured as follows:
 
